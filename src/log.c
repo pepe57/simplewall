@@ -26,7 +26,7 @@ VOID _app_loginit (
 	if (!log_path)
 		return;
 
-	status = _r_fs_createfile (&new_handle, &log_path->sr, FILE_OPEN_IF, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, FILE_ATTRIBUTE_NORMAL, 0, FALSE, NULL);
+	status = _r_fs_createfile (&new_handle, &log_path->sr, FILE_OPEN_IF, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, FILE_ATTRIBUTE_NORMAL, 0, FALSE, NULL);
 
 	if (NT_SUCCESS (status))
 	{
@@ -46,11 +46,11 @@ VOID _app_loginitfile (
 )
 {
 	BYTE bom[] = {0xFF, 0xFE};
-	LARGE_INTEGER file_size;
+	LONG64 file_size;
 
-	_r_fs_getsize (&file_size, NULL, hfile);
+	_r_fs_getsize (NULL, hfile, &file_size);
 
-	if (!file_size.QuadPart)
+	if (!file_size)
 	{
 		// write utf-16 le byte order mask
 		_r_fs_writefile (hfile, bom, sizeof (bom));
@@ -61,7 +61,7 @@ VOID _app_loginitfile (
 	else
 	{
 		// move to eof
-		_r_fs_setpos (hfile, &file_size);
+		_r_fs_setpos (hfile, file_size);
 	}
 }
 
@@ -148,7 +148,7 @@ BOOLEAN _app_logislimitreached (
 	if (!limit)
 		return FALSE;
 
-	_r_fs_getsize2 (&file_size, NULL, hfile);
+	_r_fs_getsize (NULL, hfile, &file_size);
 
 	return (file_size >= (_r_calc_kilobytes2bytes64 (limit)));
 }

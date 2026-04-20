@@ -620,7 +620,7 @@ VOID _app_notify_setposition (
 	LONG border_x;
 	BOOLEAN is_intray;
 
-	_r_wnd_getposition (&window_rect, hwnd);
+	_r_wnd_getposition (hwnd, &window_rect);
 
 	if (!is_forced && _r_wnd_isvisible (hwnd, FALSE))
 	{

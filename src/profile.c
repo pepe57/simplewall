@@ -1669,7 +1669,7 @@ VOID _app_profile_load_internal (
 	_app_db_destroy (&db_info_file);
 }
 
-VOID _app_profile_refresh (
+static VOID _app_profile_refresh (
 	_In_opt_ HWND hwnd
 )
 {
